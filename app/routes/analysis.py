@@ -18,7 +18,7 @@ def normalize_text(text):
 def cari_emisi(nama_makanan: str, df: pd.DataFrame):
     nama_norm = normalize_text(nama_makanan)
     
-    # Coba exact match dulu
+    # Coba exact match
     exact = df[df["nama_norm"] == nama_norm]
     if len(exact) > 0:
         row = exact.iloc[0]
@@ -40,8 +40,7 @@ def kategori_dampak(co2: float) -> str:
         return "Sedang 🟡"
     else:
         return "Tinggi 🔴"
-
-# Load model dan CSV saat server pertama kali jalan
+        
 print("⏳ Memuat model AI dan data emisi...")
 try:
     model = tf.keras.models.load_model("model/final_mobilenetv3_food_emission.keras")
@@ -75,21 +74,18 @@ async def static_analysis(gambar: UploadFile = File(...)):
     if not gambar.content_type.startswith("image/"):
         raise HTTPException(status_code=400, detail="File harus berupa gambar.")
 
-    # Baca dan preprocess gambar (sesuai MobileNetV3)
     isi_gambar = await gambar.read()
     img = Image.open(io.BytesIO(isi_gambar)).convert("RGB")
     img = img.resize((224, 224))
     img_array = np.array(img, dtype=np.float32)
     img_array = tf.keras.applications.mobilenet_v3.preprocess_input(img_array)
     img_array = np.expand_dims(img_array, axis=0)
-
-    # Prediksi
+    
     prediksi = model.predict(img_array, verbose=0)[0]
     indeks = int(np.argmax(prediksi))
     nama_makanan = class_names[indeks]
     confidence = float(prediksi[indeks]) * 100
 
-    # Tolak jika confidence rendah
     if confidence < 60.0:
         return {
             "makanan": None,
@@ -99,7 +95,6 @@ async def static_analysis(gambar: UploadFile = File(...)):
             "pesan": "Makanan tidak dapat dikenali. Coba foto dari sudut yang lebih jelas."
         }
 
-    # Cari CO2 dari CSV
     hasil_emisi = cari_emisi(nama_makanan, df_emisi)
 
     if hasil_emisi:
@@ -118,5 +113,5 @@ async def static_analysis(gambar: UploadFile = File(...)):
             "confidence": f"{confidence:.1f}%",
             "emisi_co2_kg": None,
             "kategori_dampak": None,
-            "pesan": "Makanan terdeteksi tapi data CO2 belum tersedia. Menunggu dataset dari tim Data Scientist."
+            "pesan": "Makanan terdeteksi tapi data CO2 belum tersedia."
         }
