@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<body>
+  <script>
+    const ws = new WebSocket("ws://localhost:8000/realtime-cam");
+
+    ws.onopen = () => {
+      console.log("✅ Terkoneksi ke /realtime-cam!");
+      ws.send(JSON.stringify({ image: "test" }));
+    };
+
+    ws.onmessage = (event) => {
+      console.log("📩 Response:", event.data);
+    };
+
+    ws.onerror = (error) => {
+      console.log("❌ Error:", error);
+    };
+  </script>
+  <p>tes camera realtime</p>
+</body>
+</html>

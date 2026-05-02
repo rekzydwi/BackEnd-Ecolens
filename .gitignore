@@ -1,0 +1,19 @@
+# Virtual environment
+venv/
+
+# Cache Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Database SQLite
+*.db
+
+# File model AI (terlalu besar untuk GitHub)
+model/*.keras
+
+# Environment variables
+.env
+
+# VS Code
+.vscode/
