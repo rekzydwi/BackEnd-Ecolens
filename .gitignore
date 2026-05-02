@@ -9,7 +9,7 @@ __pycache__/
 # Database SQLite
 *.db
 
-# File model AI (terlalu besar untuk GitHub)
+# File model AI karena terlalu besar
 model/*.keras
 
 # Environment variables
