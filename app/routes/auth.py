@@ -42,3 +42,7 @@ def login(payload: LoginRequest, db: Session = Depends(get_db)):
 @router.get("/me", response_model=UserResponse)
 def get_me(current_user: User = Depends(get_current_user)):
     return current_user
+
+@router.post("/logout")
+def logout(current_user: User = Depends(get_current_user)):
+    return {"message": f"Sampai jumpa, {current_user.name}!"}

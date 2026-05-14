@@ -2,10 +2,12 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.db.database import engine, Base
-from app.models import user  # noqa: F401
+from app.models import user          # noqa: F401
+from app.models import scan_result   # noqa: F401
 from app.routes.auth import router as auth_router
 from app.routes.realtime import router as realtime_router
 from app.routes.analysis import router as analysis_router
+from app.routes.result import router as result_router
 
 Base.metadata.create_all(bind=engine)
 
@@ -26,6 +28,7 @@ app.add_middleware(
 app.include_router(auth_router)
 app.include_router(realtime_router)
 app.include_router(analysis_router)
+app.include_router(result_router)
 
 @app.get("/", tags=["Health"])
 def root():
