@@ -1,19 +1,7 @@
-# Virtual environment
 venv/
-
-# Cache Python
 __pycache__/
 *.pyc
-*.pyo
-
-# Database SQLite
 *.db
-
-# File model AI karena terlalu besar
 model/*.keras
-
-# Environment variables
 .env
-
-# VS Code
 .vscode/

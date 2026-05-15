@@ -1,19 +1,12 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.db.database import engine, Base
-from app.models import user          # noqa: F401
-from app.models import scan_result   # noqa: F401
-from app.routes.auth import router as auth_router
-from app.routes.realtime import router as realtime_router
 from app.routes.analysis import router as analysis_router
-from app.routes.result import router as result_router
-
-Base.metadata.create_all(bind=engine)
+from app.routes.realtime import router as realtime_router
 
 app = FastAPI(
-    title="EcoLens API",
-    description="Backend API untuk EcoLens — AI-Powered CO2 Footprint Scanner",
+    title="EcoLens AI Service",
+    description="AI Service untuk EcoLens — Klasifikasi makanan dan estimasi CO2 menggunakan MobileNetV3",
     version="1.0.0"
 )
 
@@ -25,11 +18,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(auth_router)
-app.include_router(realtime_router)
 app.include_router(analysis_router)
-app.include_router(result_router)
+app.include_router(realtime_router)
 
 @app.get("/", tags=["Health"])
 def root():
-    return {"message": "EcoLens Backend Running", "status": "ok"}
+    return {"message": "EcoLens AI Service Running", "status": "ok"}
